@@ -55,7 +55,7 @@ public class TeacherDashboard extends JFrame {
         this.subjectDAO = new SubjectDAO();
         this.userDAO = new UserDAO();
 
-        setTitle("Teacher Dashboard - " + teacher.getFullName());
+        setTitle("Tableau de bord Enseignant - " + teacher.getFullName());
         setSize(900, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -74,17 +74,34 @@ public class TeacherDashboard extends JFrame {
         JPanel subjectsPanel = createSubjectsPanel();
 
         // Add tabs to tabbed pane
-        tabbedPane.addTab("View Grades", gradesPanel);
-        tabbedPane.addTab("Add Grade", addGradePanel);
-        tabbedPane.addTab("Students", studentsPanel);
-        tabbedPane.addTab("Subjects", subjectsPanel);
+        tabbedPane.addTab("Voir les notes", gradesPanel);
+        tabbedPane.addTab("Ajouter une note", addGradePanel);
+        tabbedPane.addTab("Élèves", studentsPanel);
+        tabbedPane.addTab("Matières", subjectsPanel);
 
-        // Header panel with welcome message and logout button
+        tabbedPane.setFont(new Font("Segoe UI", Font.BOLD, 12));
+
+        final Color bleu = new Color(30, 90, 160);
+        final Color blanc = Color.WHITE;
+
+        // Header bleu
         JPanel headerPanel = new JPanel(new BorderLayout());
-        JLabel welcomeLabel = new JLabel("Welcome, " + teacher.getFullName() + "!");
-        welcomeLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        headerPanel.setBackground(bleu);
+        headerPanel.setBorder(BorderFactory.createEmptyBorder(12, 16, 12, 16));
 
-        JButton logoutButton = new JButton("Logout");
+        JLabel welcomeLabel = new JLabel("Bienvenue, " + teacher.getFullName() + " !");
+        welcomeLabel.setFont(new Font("Segoe UI", Font.BOLD, 15));
+        welcomeLabel.setForeground(blanc);
+
+        JButton logoutButton = new JButton("Déconnexion");
+        logoutButton.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        logoutButton.setBackground(new Color(22, 70, 135));
+        logoutButton.setForeground(blanc);
+        logoutButton.setFocusPainted(false);
+        logoutButton.setBorderPainted(false);
+        logoutButton.setOpaque(true);
+        logoutButton.setBorder(BorderFactory.createEmptyBorder(6, 14, 6, 14));
+        logoutButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         logoutButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -96,8 +113,8 @@ public class TeacherDashboard extends JFrame {
         headerPanel.add(logoutButton, BorderLayout.EAST);
 
         // Main panel
-        JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
-        mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        mainPanel.setBackground(blanc);
         mainPanel.add(headerPanel, BorderLayout.NORTH);
         mainPanel.add(tabbedPane, BorderLayout.CENTER);
 
@@ -110,7 +127,7 @@ public class TeacherDashboard extends JFrame {
 
         // Student selection panel
         JPanel selectionPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        selectionPanel.add(new JLabel("Select Student:"));
+        selectionPanel.add(new JLabel("Sélectionner un élève :"));
 
         // SECURITY FLAW: Allow selecting any student
         List<Student> students = userDAO.getAllStudents();
@@ -129,7 +146,15 @@ public class TeacherDashboard extends JFrame {
 
         selectionPanel.add(studentComboBox);
 
-        JButton viewGradesButton = new JButton("View Grades");
+        JButton viewGradesButton = new JButton("Voir les notes");
+        viewGradesButton.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        viewGradesButton.setBackground(new Color(30, 90, 160));
+        viewGradesButton.setForeground(Color.WHITE);
+        viewGradesButton.setFocusPainted(false);
+        viewGradesButton.setBorderPainted(false);
+        viewGradesButton.setOpaque(true);
+        viewGradesButton.setBorder(BorderFactory.createEmptyBorder(6, 14, 6, 14));
+        viewGradesButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         viewGradesButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -142,7 +167,7 @@ public class TeacherDashboard extends JFrame {
         selectionPanel.add(viewGradesButton);
 
         // Grades table
-        String[] columns = {"ID", "Subject", "Title", "Value", "Coefficient", "Date", "Comment", "Actions"};
+        String[] columns = {"ID", "Matière", "Titre", "Note", "Coefficient", "Date", "Commentaire", "Actions"};
         gradesTableModel = new DefaultTableModel(columns, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -159,6 +184,14 @@ public class TeacherDashboard extends JFrame {
         gradesTable.getColumnModel().getColumn(5).setPreferredWidth(80); // Date
         gradesTable.getColumnModel().getColumn(6).setPreferredWidth(200); // Comment
         gradesTable.getColumnModel().getColumn(7).setPreferredWidth(100); // Actions
+        gradesTable.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        gradesTable.setRowHeight(26);
+        gradesTable.setGridColor(new Color(220, 228, 240));
+        gradesTable.setSelectionBackground(new Color(210, 225, 245));
+        gradesTable.setSelectionForeground(Color.BLACK);
+        gradesTable.getTableHeader().setBackground(new Color(30, 90, 160));
+        gradesTable.getTableHeader().setForeground(Color.WHITE);
+        gradesTable.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 12));
 
         // Add button column for delete action
         gradesTable.getColumnModel().getColumn(7).setCellRenderer(new ButtonRenderer());
@@ -206,7 +239,7 @@ public class TeacherDashboard extends JFrame {
         // Student selection
         gbc.gridx = 0;
         gbc.gridy = 0;
-        formPanel.add(new JLabel("Student:"), gbc);
+        formPanel.add(new JLabel("Élève :"), gbc);
 
         gbc.gridx = 1;
         gbc.gridy = 0;
@@ -231,7 +264,7 @@ public class TeacherDashboard extends JFrame {
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.gridwidth = 1;
-        formPanel.add(new JLabel("Subject:"), gbc);
+        formPanel.add(new JLabel("Matière :"), gbc);
 
         gbc.gridx = 1;
         gbc.gridy = 1;
@@ -256,7 +289,7 @@ public class TeacherDashboard extends JFrame {
         gbc.gridx = 0;
         gbc.gridy = 2;
         gbc.gridwidth = 1;
-        formPanel.add(new JLabel("Title:"), gbc);
+        formPanel.add(new JLabel("Titre :"), gbc);
 
         gbc.gridx = 1;
         gbc.gridy = 2;
@@ -268,7 +301,7 @@ public class TeacherDashboard extends JFrame {
         gbc.gridx = 0;
         gbc.gridy = 3;
         gbc.gridwidth = 1;
-        formPanel.add(new JLabel("Value:"), gbc);
+        formPanel.add(new JLabel("Note :"), gbc);
 
         gbc.gridx = 1;
         gbc.gridy = 3;
@@ -280,7 +313,7 @@ public class TeacherDashboard extends JFrame {
         gbc.gridx = 0;
         gbc.gridy = 4;
         gbc.gridwidth = 1;
-        formPanel.add(new JLabel("Coefficient:"), gbc);
+        formPanel.add(new JLabel("Coefficient :"), gbc);
 
         gbc.gridx = 1;
         gbc.gridy = 4;
@@ -293,7 +326,7 @@ public class TeacherDashboard extends JFrame {
         gbc.gridx = 0;
         gbc.gridy = 5;
         gbc.gridwidth = 1;
-        formPanel.add(new JLabel("Comment:"), gbc);
+        formPanel.add(new JLabel("Commentaire :"), gbc);
 
         gbc.gridx = 1;
         gbc.gridy = 5;
@@ -307,7 +340,15 @@ public class TeacherDashboard extends JFrame {
         gbc.gridx = 1;
         gbc.gridy = 6;
         gbc.gridwidth = 1;
-        JButton addButton = new JButton("Add Grade");
+        JButton addButton = new JButton("Ajouter la note");
+        addButton.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        addButton.setBackground(new Color(30, 90, 160));
+        addButton.setForeground(Color.WHITE);
+        addButton.setFocusPainted(false);
+        addButton.setBorderPainted(false);
+        addButton.setOpaque(true);
+        addButton.setBorder(BorderFactory.createEmptyBorder(7, 14, 7, 14));
+        addButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -325,7 +366,7 @@ public class TeacherDashboard extends JFrame {
 
                     if (success) {
                         JOptionPane.showMessageDialog(TeacherDashboard.this, 
-                                "Grade added successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
+                                "Note ajoutée avec succès", "Succès", JOptionPane.INFORMATION_MESSAGE);
 
                         // Clear form
                         titleInput.setText("");
@@ -340,12 +381,12 @@ public class TeacherDashboard extends JFrame {
                         }
                     } else {
                         JOptionPane.showMessageDialog(TeacherDashboard.this, 
-                                "Failed to add grade", "Error", JOptionPane.ERROR_MESSAGE);
+                                "Échec de l'ajout de la note", "Erreur", JOptionPane.ERROR_MESSAGE);
                     }
                 } catch (NumberFormatException ex) {
                     JOptionPane.showMessageDialog(TeacherDashboard.this, 
-                            "Invalid value or coefficient. Please enter valid numbers.", 
-                            "Error", JOptionPane.ERROR_MESSAGE);
+                            "Note ou coefficient invalide. Veuillez saisir des nombres valides.", 
+                            "Erreur", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -354,7 +395,15 @@ public class TeacherDashboard extends JFrame {
         // Reset button
         gbc.gridx = 2;
         gbc.gridy = 6;
-        JButton resetButton = new JButton("Reset");
+        JButton resetButton = new JButton("Réinitialiser");
+        resetButton.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        resetButton.setBackground(new Color(100, 130, 170));
+        resetButton.setForeground(Color.WHITE);
+        resetButton.setFocusPainted(false);
+        resetButton.setBorderPainted(false);
+        resetButton.setOpaque(true);
+        resetButton.setBorder(BorderFactory.createEmptyBorder(7, 14, 7, 14));
+        resetButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         resetButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -376,10 +425,18 @@ public class TeacherDashboard extends JFrame {
         panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         // Students table
-        String[] columns = {"ID", "Name", "Email", "Class Group"};
+        String[] columns = {"ID", "Nom", "Email", "Groupe"};
         studentsTableModel = new DefaultTableModel(columns, 0);
 
         studentsTable = new JTable(studentsTableModel);
+        studentsTable.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        studentsTable.setRowHeight(26);
+        studentsTable.setGridColor(new Color(220, 228, 240));
+        studentsTable.setSelectionBackground(new Color(210, 225, 245));
+        studentsTable.setSelectionForeground(Color.BLACK);
+        studentsTable.getTableHeader().setBackground(new Color(30, 90, 160));
+        studentsTable.getTableHeader().setForeground(Color.WHITE);
+        studentsTable.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 12));
         JScrollPane scrollPane = new JScrollPane(studentsTable);
 
         // Load students
@@ -394,7 +451,7 @@ public class TeacherDashboard extends JFrame {
             studentsTableModel.addRow(row);
         }
 
-        panel.add(new JLabel("All Students:"), BorderLayout.NORTH);
+        panel.add(new JLabel("Tous les élèves :"), BorderLayout.NORTH);
         panel.add(scrollPane, BorderLayout.CENTER);
 
         return panel;
@@ -405,11 +462,19 @@ public class TeacherDashboard extends JFrame {
         panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         // Subjects table
-        String[] columns = {"ID", "Code", "Name", "Description", "Default Coefficient"};
+        String[] columns = {"ID", "Code", "Nom", "Description", "Coefficient par défaut"};
         subjectsTableModel = new DefaultTableModel(columns, 0);
 
         subjectsTable = new JTable(subjectsTableModel);
-        JScrollPane scrollPane = new JScrollPane(subjectsTable);
+        subjectsTable.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        subjectsTable.setRowHeight(26);
+        subjectsTable.setGridColor(new Color(220, 228, 240));
+        subjectsTable.setSelectionBackground(new Color(210, 225, 245));
+        subjectsTable.setSelectionForeground(Color.BLACK);
+        subjectsTable.getTableHeader().setBackground(new Color(30, 90, 160));
+        subjectsTable.getTableHeader().setForeground(Color.WHITE);
+        subjectsTable.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 12));
+        JScrollPane scrollPane2 = new JScrollPane(subjectsTable);
 
         // Load subjects
         List<Subject> subjects = subjectDAO.getAllSubjects();
@@ -424,8 +489,8 @@ public class TeacherDashboard extends JFrame {
             subjectsTableModel.addRow(row);
         }
 
-        panel.add(new JLabel("All Subjects:"), BorderLayout.NORTH);
-        panel.add(scrollPane, BorderLayout.CENTER);
+        panel.add(new JLabel("Toutes les matières :"), BorderLayout.NORTH);
+        panel.add(scrollPane2, BorderLayout.CENTER);
 
         return panel;
     }
@@ -447,7 +512,7 @@ public class TeacherDashboard extends JFrame {
                 grade.getCoefficient(),
                 grade.getDate() != null ? DATE_FORMAT.format(grade.getDate()) : "",
                 grade.getComment(), // SECURITY FLAW: XSS vulnerability (no escaping of HTML)
-                "Delete"
+                "Supprimer"
             };
             gradesTableModel.addRow(row);
         }
@@ -477,7 +542,7 @@ public class TeacherDashboard extends JFrame {
                     System.out.println("Grade updated successfully: " + gradeId);
                 } else {
                     JOptionPane.showMessageDialog(this, 
-                            "Failed to update grade", "Error", JOptionPane.ERROR_MESSAGE);
+                        "Échec de la mise à jour de la note", "Erreur", JOptionPane.ERROR_MESSAGE);
 
                     // Reload grades to reset the invalid value
                     Student selectedStudent = (Student) studentComboBox.getSelectedItem();
@@ -488,8 +553,8 @@ public class TeacherDashboard extends JFrame {
             }
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, 
-                    "Invalid grade value or coefficient. Please enter valid numbers.", 
-                    "Error", JOptionPane.ERROR_MESSAGE);
+                    "Note ou coefficient invalide. Veuillez saisir des nombres valides.", 
+                    "Erreur", JOptionPane.ERROR_MESSAGE);
 
             // Reload grades to reset the invalid value
             Student selectedStudent = (Student) studentComboBox.getSelectedItem();
@@ -502,8 +567,8 @@ public class TeacherDashboard extends JFrame {
     // SECURITY FLAW: No access control, any teacher can delete any grade
     private void deleteGrade(int gradeId, int row) {
         int confirm = JOptionPane.showConfirmDialog(this, 
-                "Are you sure you want to delete this grade?", 
-                "Confirm Delete", JOptionPane.YES_NO_OPTION);
+                "Voulez-vous vraiment supprimer cette note ?", 
+                "Confirmer la suppression", JOptionPane.YES_NO_OPTION);
 
         if (confirm == JOptionPane.YES_OPTION) {
             boolean success = gradeDAO.deleteGrade(gradeId);
@@ -513,7 +578,7 @@ public class TeacherDashboard extends JFrame {
                 System.out.println("Grade deleted successfully: " + gradeId);
             } else {
                 JOptionPane.showMessageDialog(this, 
-                        "Failed to delete grade", "Error", JOptionPane.ERROR_MESSAGE);
+                        "Échec de la suppression de la note", "Erreur", JOptionPane.ERROR_MESSAGE);
             }
         }
     }

@@ -43,7 +43,7 @@ public class StudentDashboard extends JFrame {
         this.gradeDAO = new GradeDAO();
         this.subjectDAO = new SubjectDAO();
         
-        setTitle("Student Dashboard - " + student.getFullName());
+        setTitle("Tableau de bord Élève - " + student.getFullName());
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -53,34 +53,64 @@ public class StudentDashboard extends JFrame {
     }
     
     private void initComponents() {
-        // Main panel
-        JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
-        mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        
-        // Header panel
+        final Color bleu = new Color(30, 90, 160);
+        final Color blanc = Color.WHITE;
+
+        // Header bleu
         JPanel headerPanel = new JPanel(new BorderLayout());
-        JLabel welcomeLabel = new JLabel("Welcome, " + student.getFullName() + "!");
-        welcomeLabel.setFont(new Font("Arial", Font.BOLD, 16));
-        
-        logoutButton = new JButton("Logout");
+        headerPanel.setBackground(bleu);
+        headerPanel.setBorder(BorderFactory.createEmptyBorder(12, 16, 12, 16));
+
+        JLabel welcomeLabel = new JLabel("Bienvenue, " + student.getFullName() + " !");
+        welcomeLabel.setFont(new Font("Segoe UI", Font.BOLD, 15));
+        welcomeLabel.setForeground(blanc);
+
+        logoutButton = new JButton("Déconnexion");
+        logoutButton.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        logoutButton.setBackground(new Color(22, 70, 135));
+        logoutButton.setForeground(blanc);
+        logoutButton.setFocusPainted(false);
+        logoutButton.setBorderPainted(false);
+        logoutButton.setOpaque(true);
+        logoutButton.setBorder(BorderFactory.createEmptyBorder(6, 14, 6, 14));
+        logoutButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         logoutButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 logout();
             }
         });
-        
+
         headerPanel.add(welcomeLabel, BorderLayout.WEST);
         headerPanel.add(logoutButton, BorderLayout.EAST);
-        
-        // Student ID input panel (SECURITY FLAW: Allowing to view any student's grades)
-        JPanel studentIdPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        studentIdPanel.add(new JLabel("Student ID:"));
-        studentIdField = new JTextField(10);
+
+        // Barre de recherche / sélection (SECURITY FLAW: Allowing to view any student's grades)
+        JPanel studentIdPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 8));
+        studentIdPanel.setBackground(new Color(240, 245, 252));
+        studentIdPanel.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(195, 210, 230)));
+
+        JLabel idLabel = new JLabel("ID Élève :");
+        idLabel.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        idLabel.setForeground(new Color(70, 80, 95));
+        studentIdPanel.add(idLabel);
+
+        studentIdField = new JTextField(8);
         studentIdField.setText(String.valueOf(student.getId())); // Default to current student
+        studentIdField.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        studentIdField.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(195, 210, 230)),
+            BorderFactory.createEmptyBorder(4, 8, 4, 8)));
         studentIdPanel.add(studentIdField);
-        
-        viewGradesButton = new JButton("View Grades");
+
+        viewGradesButton = new JButton("Voir les notes");
+        viewGradesButton.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        viewGradesButton.setBackground(bleu);
+        viewGradesButton.setForeground(blanc);
+        viewGradesButton.setFocusPainted(false);
+        viewGradesButton.setBorderPainted(false);
+        viewGradesButton.setOpaque(true);
+        viewGradesButton.setBorder(BorderFactory.createEmptyBorder(6, 14, 6, 14));
+        viewGradesButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         viewGradesButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -88,21 +118,22 @@ public class StudentDashboard extends JFrame {
                     int studentId = Integer.parseInt(studentIdField.getText());
                     loadGrades(studentId);
                 } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(StudentDashboard.this, 
-                            "Invalid student ID", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(StudentDashboard.this,
+                            "ID élève invalide", "Erreur", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
         studentIdPanel.add(viewGradesButton);
-        
+
         // Average label
-        averageLabel = new JLabel("Overall Average: N/A");
-        averageLabel.setFont(new Font("Arial", Font.BOLD, 14));
-        studentIdPanel.add(Box.createHorizontalStrut(50));
+        averageLabel = new JLabel("Moyenne générale : N/A");
+        averageLabel.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        averageLabel.setForeground(bleu);
+        studentIdPanel.add(Box.createHorizontalStrut(30));
         studentIdPanel.add(averageLabel);
-        
-        // Table for grades
-        String[] columns = {"ID", "Subject", "Title", "Value", "Coefficient", "Date", "Comment"};
+
+        // Table des notes
+        String[] columns = {"ID", "Matière", "Titre", "Note", "Coefficient", "Date", "Commentaire"};
         tableModel = new DefaultTableModel(columns, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -110,36 +141,48 @@ public class StudentDashboard extends JFrame {
                 return column == 3; // Only the value column is editable
             }
         };
-        
+
         gradesTable = new JTable(tableModel);
-        gradesTable.getColumnModel().getColumn(0).setPreferredWidth(30); // ID
-        gradesTable.getColumnModel().getColumn(1).setPreferredWidth(100); // Subject
-        gradesTable.getColumnModel().getColumn(2).setPreferredWidth(150); // Title
-        gradesTable.getColumnModel().getColumn(3).setPreferredWidth(50); // Value
-        gradesTable.getColumnModel().getColumn(4).setPreferredWidth(80); // Coefficient
-        gradesTable.getColumnModel().getColumn(5).setPreferredWidth(80); // Date
-        gradesTable.getColumnModel().getColumn(6).setPreferredWidth(200); // Comment
-        
+        gradesTable.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        gradesTable.setRowHeight(26);
+        gradesTable.setGridColor(new Color(220, 228, 240));
+        gradesTable.setSelectionBackground(new Color(210, 225, 245));
+        gradesTable.setSelectionForeground(Color.BLACK);
+        gradesTable.getTableHeader().setBackground(new Color(30, 90, 160));
+        gradesTable.getTableHeader().setForeground(Color.WHITE);
+        gradesTable.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 12));
+        gradesTable.getColumnModel().getColumn(0).setPreferredWidth(30);
+        gradesTable.getColumnModel().getColumn(1).setPreferredWidth(100);
+        gradesTable.getColumnModel().getColumn(2).setPreferredWidth(150);
+        gradesTable.getColumnModel().getColumn(3).setPreferredWidth(50);
+        gradesTable.getColumnModel().getColumn(4).setPreferredWidth(80);
+        gradesTable.getColumnModel().getColumn(5).setPreferredWidth(80);
+        gradesTable.getColumnModel().getColumn(6).setPreferredWidth(200);
+
         // SECURITY FLAW: Allow editing grades directly in the table
         gradesTable.getModel().addTableModelListener(e -> {
             if (e.getType() == javax.swing.event.TableModelEvent.UPDATE) {
                 int row = e.getFirstRow();
                 int column = e.getColumn();
-                
-                if (column == 3) { // Value column
+                if (column == 3) {
                     updateGrade(row);
                 }
             }
         });
-        
+
         JScrollPane scrollPane = new JScrollPane(gradesTable);
-        
-        // Add components to main panel
-        mainPanel.add(headerPanel, BorderLayout.NORTH);
-        mainPanel.add(studentIdPanel, BorderLayout.CENTER);
-        mainPanel.add(scrollPane, BorderLayout.SOUTH);
-        
-        // Set main panel as content pane
+
+        // Barre du haut = header + studentIdPanel
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.add(headerPanel, BorderLayout.NORTH);
+        topPanel.add(studentIdPanel, BorderLayout.SOUTH);
+
+        // Main panel
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        mainPanel.setBackground(blanc);
+        mainPanel.add(topPanel, BorderLayout.NORTH);
+        mainPanel.add(scrollPane, BorderLayout.CENTER);
+
         setContentPane(mainPanel);
     }
     
@@ -191,15 +234,15 @@ public class StudentDashboard extends JFrame {
                     // Refresh the average
                     int studentId = Integer.parseInt(studentIdField.getText());
                     double average = gradeDAO.calculateOverallAverageForStudent(studentId);
-                    averageLabel.setText("Overall Average: " + String.format("%.2f", average));
+                    averageLabel.setText("Moyenne générale : " + String.format("%.2f", average));
                 } else {
                     JOptionPane.showMessageDialog(this, 
-                            "Failed to update grade", "Error", JOptionPane.ERROR_MESSAGE);
+                            "Échec de la mise à jour de la note", "Erreur", JOptionPane.ERROR_MESSAGE);
                 }
             }
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, 
-                    "Invalid grade value. Please enter a number.", "Error", JOptionPane.ERROR_MESSAGE);
+                    "Note invalide. Veuillez saisir un nombre.", "Erreur", JOptionPane.ERROR_MESSAGE);
             
             // Reload grades to reset the invalid value
             int studentId = Integer.parseInt(studentIdField.getText());

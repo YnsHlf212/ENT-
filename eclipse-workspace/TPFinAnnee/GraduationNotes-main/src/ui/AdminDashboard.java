@@ -50,7 +50,7 @@ public class AdminDashboard extends JFrame {
         this.subjectDAO = new SubjectDAO();
         this.gradeDAO = new GradeDAO();
 
-        setTitle("Admin Dashboard - " + admin.getFullName());
+        setTitle("Tableau de bord Admin - " + admin.getFullName());
         setSize(900, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -68,16 +68,33 @@ public class AdminDashboard extends JFrame {
         JPanel gradesPanel = createGradesPanel();
 
         // Add tabs to tabbed pane
-        tabbedPane.addTab("Users", usersPanel);
-        tabbedPane.addTab("Subjects", subjectsPanel);
-        tabbedPane.addTab("Grades", gradesPanel);
+        tabbedPane.addTab("Utilisateurs", usersPanel);
+        tabbedPane.addTab("Matières", subjectsPanel);
+        tabbedPane.addTab("Notes", gradesPanel);
 
-        // Header panel with welcome message and logout button
+        tabbedPane.setFont(new Font("Segoe UI", Font.BOLD, 12));
+
+        final Color bleu = new Color(30, 90, 160);
+        final Color blanc = Color.WHITE;
+
+        // Header bleu
         JPanel headerPanel = new JPanel(new BorderLayout());
-        JLabel welcomeLabel = new JLabel("Welcome, " + admin.getFullName() + "!");
-        welcomeLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        headerPanel.setBackground(bleu);
+        headerPanel.setBorder(BorderFactory.createEmptyBorder(12, 16, 12, 16));
 
-        JButton logoutButton = new JButton("Logout");
+        JLabel welcomeLabel = new JLabel("Bienvenue, " + admin.getFullName() + " !");
+        welcomeLabel.setFont(new Font("Segoe UI", Font.BOLD, 15));
+        welcomeLabel.setForeground(blanc);
+
+        JButton logoutButton = new JButton("Déconnexion");
+        logoutButton.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        logoutButton.setBackground(new Color(22, 70, 135));
+        logoutButton.setForeground(blanc);
+        logoutButton.setFocusPainted(false);
+        logoutButton.setBorderPainted(false);
+        logoutButton.setOpaque(true);
+        logoutButton.setBorder(BorderFactory.createEmptyBorder(6, 14, 6, 14));
+        logoutButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         logoutButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -89,8 +106,8 @@ public class AdminDashboard extends JFrame {
         headerPanel.add(logoutButton, BorderLayout.EAST);
 
         // Main panel
-        JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
-        mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        mainPanel.setBackground(blanc);
         mainPanel.add(headerPanel, BorderLayout.NORTH);
         mainPanel.add(tabbedPane, BorderLayout.CENTER);
 
@@ -102,7 +119,7 @@ public class AdminDashboard extends JFrame {
         panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         // Users table
-        String[] columns = {"ID", "Username", "Password", "Role", "Full Name", "Email", "Class Group", "Actions"};
+        String[] columns = {"ID", "Identifiant", "Mot de passe", "Rôle", "Nom complet", "Email", "Groupe", "Actions"};
         usersTableModel = new DefaultTableModel(columns, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -111,6 +128,14 @@ public class AdminDashboard extends JFrame {
         };
 
         usersTable = new JTable(usersTableModel);
+        usersTable.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        usersTable.setRowHeight(26);
+        usersTable.setGridColor(new Color(220, 228, 240));
+        usersTable.setSelectionBackground(new Color(210, 225, 245));
+        usersTable.setSelectionForeground(Color.BLACK);
+        usersTable.getTableHeader().setBackground(new Color(30, 90, 160));
+        usersTable.getTableHeader().setForeground(Color.WHITE);
+        usersTable.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 12));
         JScrollPane scrollPane = new JScrollPane(usersTable);
 
         // Add button column for delete action
@@ -139,9 +164,17 @@ public class AdminDashboard extends JFrame {
 
         // Add user panel
         JPanel addUserPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        addUserPanel.add(new JLabel("Add New User:"));
+        addUserPanel.add(new JLabel("Ajouter un utilisateur :"));
 
-        JButton addUserButton = new JButton("Add User");
+        JButton addUserButton = new JButton("Ajouter");
+        addUserButton.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        addUserButton.setBackground(new Color(30, 90, 160));
+        addUserButton.setForeground(Color.WHITE);
+        addUserButton.setFocusPainted(false);
+        addUserButton.setBorderPainted(false);
+        addUserButton.setOpaque(true);
+        addUserButton.setBorder(BorderFactory.createEmptyBorder(6, 14, 6, 14));
+        addUserButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         addUserButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -162,7 +195,7 @@ public class AdminDashboard extends JFrame {
         panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         // Subjects table
-        String[] columns = {"ID", "Code", "Name", "Description", "Default Coefficient", "Actions"};
+        String[] columns = {"ID", "Code", "Nom", "Description", "Coefficient par défaut", "Actions"};
         subjectsTableModel = new DefaultTableModel(columns, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -171,6 +204,14 @@ public class AdminDashboard extends JFrame {
         };
 
         subjectsTable = new JTable(subjectsTableModel);
+        subjectsTable.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        subjectsTable.setRowHeight(26);
+        subjectsTable.setGridColor(new Color(220, 228, 240));
+        subjectsTable.setSelectionBackground(new Color(210, 225, 245));
+        subjectsTable.setSelectionForeground(Color.BLACK);
+        subjectsTable.getTableHeader().setBackground(new Color(30, 90, 160));
+        subjectsTable.getTableHeader().setForeground(Color.WHITE);
+        subjectsTable.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 12));
         JScrollPane scrollPane = new JScrollPane(subjectsTable);
 
         // Add button column for delete action
@@ -199,9 +240,17 @@ public class AdminDashboard extends JFrame {
 
         // Add subject panel
         JPanel addSubjectPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        addSubjectPanel.add(new JLabel("Add New Subject:"));
+        addSubjectPanel.add(new JLabel("Ajouter une matière :"));
 
-        JButton addSubjectButton = new JButton("Add Subject");
+        JButton addSubjectButton = new JButton("Ajouter");
+        addSubjectButton.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        addSubjectButton.setBackground(new Color(30, 90, 160));
+        addSubjectButton.setForeground(Color.WHITE);
+        addSubjectButton.setFocusPainted(false);
+        addSubjectButton.setBorderPainted(false);
+        addSubjectButton.setOpaque(true);
+        addSubjectButton.setBorder(BorderFactory.createEmptyBorder(6, 14, 6, 14));
+        addSubjectButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         addSubjectButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -223,7 +272,7 @@ public class AdminDashboard extends JFrame {
 
         // Student selection panel
         JPanel selectionPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        selectionPanel.add(new JLabel("Select Student:"));
+        selectionPanel.add(new JLabel("Sélectionner un élève :"));
 
         // SECURITY FLAW: Allow selecting any student
         List<Student> students = userDAO.getAllStudents();
@@ -242,7 +291,15 @@ public class AdminDashboard extends JFrame {
 
         selectionPanel.add(studentComboBox);
 
-        JButton viewGradesButton = new JButton("View Grades");
+        JButton viewGradesButton = new JButton("Voir les notes");
+        viewGradesButton.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        viewGradesButton.setBackground(new Color(30, 90, 160));
+        viewGradesButton.setForeground(Color.WHITE);
+        viewGradesButton.setFocusPainted(false);
+        viewGradesButton.setBorderPainted(false);
+        viewGradesButton.setOpaque(true);
+        viewGradesButton.setBorder(BorderFactory.createEmptyBorder(6, 14, 6, 14));
+        viewGradesButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         viewGradesButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -255,7 +312,7 @@ public class AdminDashboard extends JFrame {
         selectionPanel.add(viewGradesButton);
 
         // Grades table
-        String[] columns = {"ID", "Student", "Subject", "Title", "Value", "Coefficient", "Date", "Comment", "Actions"};
+        String[] columns = {"ID", "Élève", "Matière", "Titre", "Note", "Coefficient", "Date", "Commentaire", "Actions"};
         gradesTableModel = new DefaultTableModel(columns, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -273,6 +330,14 @@ public class AdminDashboard extends JFrame {
         gradesTable.getColumnModel().getColumn(6).setPreferredWidth(80); // Date
         gradesTable.getColumnModel().getColumn(7).setPreferredWidth(200); // Comment
         gradesTable.getColumnModel().getColumn(8).setPreferredWidth(100); // Actions
+        gradesTable.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        gradesTable.setRowHeight(26);
+        gradesTable.setGridColor(new Color(220, 228, 240));
+        gradesTable.setSelectionBackground(new Color(210, 225, 245));
+        gradesTable.setSelectionForeground(Color.BLACK);
+        gradesTable.getTableHeader().setBackground(new Color(30, 90, 160));
+        gradesTable.getTableHeader().setForeground(Color.WHITE);
+        gradesTable.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 12));
 
         // Add button column for delete action
         gradesTable.getColumnModel().getColumn(8).setCellRenderer(new ButtonRenderer());
@@ -323,7 +388,7 @@ public class AdminDashboard extends JFrame {
                 student.getFullName(),
                 student.getEmail(),
                 student.getClassGroup(),
-                "Delete"
+                "Supprimer"
             };
             usersTableModel.addRow(row);
         }
@@ -339,7 +404,7 @@ public class AdminDashboard extends JFrame {
                 teacher.getFullName(),
                 teacher.getEmail(),
                 "",
-                "Delete"
+                "Supprimer"
             };
             usersTableModel.addRow(row);
         }
@@ -358,7 +423,7 @@ public class AdminDashboard extends JFrame {
                 subject.getName(),
                 subject.getDescription(),
                 subject.getDefaultCoefficient(),
-                "Delete"
+                "Supprimer"
             };
             subjectsTableModel.addRow(row);
         }
@@ -394,14 +459,14 @@ public class AdminDashboard extends JFrame {
                 grade.getCoefficient(),
                 grade.getDate() != null ? DATE_FORMAT.format(grade.getDate()) : "",
                 grade.getComment(), // SECURITY FLAW: XSS vulnerability (no escaping of HTML)
-                "Delete"
+                "Supprimer"
             };
             gradesTableModel.addRow(row);
         }
     }
 
     private void showAddUserDialog() {
-        JDialog dialog = new JDialog(this, "Add New User", true);
+        JDialog dialog = new JDialog(this, "Ajouter un utilisateur", true);
         dialog.setSize(400, 350);
         dialog.setLocationRelativeTo(this);
 
@@ -413,7 +478,7 @@ public class AdminDashboard extends JFrame {
         // Username
         gbc.gridx = 0;
         gbc.gridy = 0;
-        panel.add(new JLabel("Username:"), gbc);
+        panel.add(new JLabel("Identifiant :"), gbc);
 
         gbc.gridx = 1;
         gbc.gridy = 0;
@@ -423,7 +488,7 @@ public class AdminDashboard extends JFrame {
         // Password
         gbc.gridx = 0;
         gbc.gridy = 1;
-        panel.add(new JLabel("Password:"), gbc);
+        panel.add(new JLabel("Mot de passe :"), gbc);
 
         gbc.gridx = 1;
         gbc.gridy = 1;
@@ -433,7 +498,7 @@ public class AdminDashboard extends JFrame {
         // Role
         gbc.gridx = 0;
         gbc.gridy = 2;
-        panel.add(new JLabel("Role:"), gbc);
+        panel.add(new JLabel("Rôle :"), gbc);
 
         gbc.gridx = 1;
         gbc.gridy = 2;
@@ -444,7 +509,7 @@ public class AdminDashboard extends JFrame {
         // Full Name
         gbc.gridx = 0;
         gbc.gridy = 3;
-        panel.add(new JLabel("Full Name:"), gbc);
+        panel.add(new JLabel("Nom complet :"), gbc);
 
         gbc.gridx = 1;
         gbc.gridy = 3;
@@ -454,7 +519,7 @@ public class AdminDashboard extends JFrame {
         // Email
         gbc.gridx = 0;
         gbc.gridy = 4;
-        panel.add(new JLabel("Email:"), gbc);
+        panel.add(new JLabel("Email :"), gbc);
 
         gbc.gridx = 1;
         gbc.gridy = 4;
@@ -464,7 +529,7 @@ public class AdminDashboard extends JFrame {
         // Class Group (for students)
         gbc.gridx = 0;
         gbc.gridy = 5;
-        JLabel classGroupLabel = new JLabel("Class Group:");
+        JLabel classGroupLabel = new JLabel("Groupe :");
         panel.add(classGroupLabel, gbc);
 
         gbc.gridx = 1;
@@ -492,7 +557,7 @@ public class AdminDashboard extends JFrame {
         gbc.gridy = 6;
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.CENTER;
-        JButton addButton = new JButton("Add User");
+        JButton addButton = new JButton("Ajouter");
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -518,12 +583,12 @@ public class AdminDashboard extends JFrame {
 
                 if (success) {
                     JOptionPane.showMessageDialog(dialog, 
-                            "User added successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
+                            "Utilisateur ajouté avec succès", "Succès", JOptionPane.INFORMATION_MESSAGE);
                     dialog.dispose();
                     loadUsers(); // Refresh the users table
                 } else {
                     JOptionPane.showMessageDialog(dialog, 
-                            "Failed to add user", "Error", JOptionPane.ERROR_MESSAGE);
+                            "Échec de l'ajout de l'utilisateur", "Erreur", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -534,7 +599,7 @@ public class AdminDashboard extends JFrame {
     }
 
     private void showAddSubjectDialog() {
-        JDialog dialog = new JDialog(this, "Add New Subject", true);
+        JDialog dialog = new JDialog(this, "Ajouter une matière", true);
         dialog.setSize(400, 300);
         dialog.setLocationRelativeTo(this);
 
@@ -546,7 +611,7 @@ public class AdminDashboard extends JFrame {
         // Code
         gbc.gridx = 0;
         gbc.gridy = 0;
-        panel.add(new JLabel("Code:"), gbc);
+        panel.add(new JLabel("Code :"), gbc);
 
         gbc.gridx = 1;
         gbc.gridy = 0;
@@ -556,7 +621,7 @@ public class AdminDashboard extends JFrame {
         // Name
         gbc.gridx = 0;
         gbc.gridy = 1;
-        panel.add(new JLabel("Name:"), gbc);
+        panel.add(new JLabel("Nom :"), gbc);
 
         gbc.gridx = 1;
         gbc.gridy = 1;
@@ -566,7 +631,7 @@ public class AdminDashboard extends JFrame {
         // Description
         gbc.gridx = 0;
         gbc.gridy = 2;
-        panel.add(new JLabel("Description:"), gbc);
+        panel.add(new JLabel("Description :"), gbc);
 
         gbc.gridx = 1;
         gbc.gridy = 2;
@@ -576,7 +641,7 @@ public class AdminDashboard extends JFrame {
         // Default Coefficient
         gbc.gridx = 0;
         gbc.gridy = 3;
-        panel.add(new JLabel("Default Coefficient:"), gbc);
+        panel.add(new JLabel("Coefficient par défaut :"), gbc);
 
         gbc.gridx = 1;
         gbc.gridy = 3;
@@ -588,7 +653,7 @@ public class AdminDashboard extends JFrame {
         gbc.gridy = 4;
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.CENTER;
-        JButton addButton = new JButton("Add Subject");
+        JButton addButton = new JButton("Ajouter");
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -605,17 +670,17 @@ public class AdminDashboard extends JFrame {
 
                     if (success) {
                         JOptionPane.showMessageDialog(dialog, 
-                                "Subject added successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
+                                "Matière ajoutée avec succès", "Succès", JOptionPane.INFORMATION_MESSAGE);
                         dialog.dispose();
                         loadSubjects(); // Refresh the subjects table
                     } else {
                         JOptionPane.showMessageDialog(dialog, 
-                                "Failed to add subject", "Error", JOptionPane.ERROR_MESSAGE);
+                                "Échec de l'ajout de la matière", "Erreur", JOptionPane.ERROR_MESSAGE);
                     }
                 } catch (NumberFormatException ex) {
                     JOptionPane.showMessageDialog(dialog, 
-                            "Invalid coefficient. Please enter a valid number.", 
-                            "Error", JOptionPane.ERROR_MESSAGE);
+                            "Coefficient invalide. Veuillez saisir un nombre valide.", 
+                            "Erreur", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -653,13 +718,13 @@ public class AdminDashboard extends JFrame {
                 System.out.println("User updated successfully: " + userId);
             } else {
                 JOptionPane.showMessageDialog(this, 
-                        "Failed to update user", "Error", JOptionPane.ERROR_MESSAGE);
+                        "Échec de la mise à jour de l'utilisateur", "Erreur", JOptionPane.ERROR_MESSAGE);
                 loadUsers(); // Reload to reset invalid values
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, 
-                    "Error updating user: " + e.getMessage(), 
-                    "Error", JOptionPane.ERROR_MESSAGE);
+                    "Erreur lors de la mise à jour : " + e.getMessage(), 
+                    "Erreur", JOptionPane.ERROR_MESSAGE);
             loadUsers(); // Reload to reset invalid values
         }
     }
@@ -667,8 +732,8 @@ public class AdminDashboard extends JFrame {
     // SECURITY FLAW: No access control, admin can delete any user
     private void deleteUser(int userId, int row) {
         int confirm = JOptionPane.showConfirmDialog(this, 
-                "Are you sure you want to delete this user?", 
-                "Confirm Delete", JOptionPane.YES_NO_OPTION);
+                "Voulez-vous vraiment supprimer cet utilisateur ?", 
+                "Confirmer la suppression", JOptionPane.YES_NO_OPTION);
 
         if (confirm == JOptionPane.YES_OPTION) {
             boolean success = userDAO.deleteUser(userId);
@@ -678,7 +743,7 @@ public class AdminDashboard extends JFrame {
                 System.out.println("User deleted successfully: " + userId);
             } else {
                 JOptionPane.showMessageDialog(this, 
-                        "Failed to delete user", "Error", JOptionPane.ERROR_MESSAGE);
+                        "Échec de la suppression de l'utilisateur", "Erreur", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
@@ -701,13 +766,13 @@ public class AdminDashboard extends JFrame {
                 System.out.println("Subject updated successfully: " + subjectId);
             } else {
                 JOptionPane.showMessageDialog(this, 
-                        "Failed to update subject", "Error", JOptionPane.ERROR_MESSAGE);
+                        "Échec de la mise à jour de la matière", "Erreur", JOptionPane.ERROR_MESSAGE);
                 loadSubjects(); // Reload to reset invalid values
             }
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, 
-                    "Invalid coefficient. Please enter a valid number.", 
-                    "Error", JOptionPane.ERROR_MESSAGE);
+                    "Coefficient invalide. Veuillez saisir un nombre valide.", 
+                    "Erreur", JOptionPane.ERROR_MESSAGE);
             loadSubjects(); // Reload to reset invalid values
         }
     }
@@ -715,8 +780,8 @@ public class AdminDashboard extends JFrame {
     // SECURITY FLAW: No access control, admin can delete any subject
     private void deleteSubject(int subjectId, int row) {
         int confirm = JOptionPane.showConfirmDialog(this, 
-                "Are you sure you want to delete this subject?", 
-                "Confirm Delete", JOptionPane.YES_NO_OPTION);
+                "Voulez-vous vraiment supprimer cette matière ?", 
+                "Confirmer la suppression", JOptionPane.YES_NO_OPTION);
 
         if (confirm == JOptionPane.YES_OPTION) {
             boolean success = subjectDAO.deleteSubject(subjectId);
@@ -726,7 +791,7 @@ public class AdminDashboard extends JFrame {
                 System.out.println("Subject deleted successfully: " + subjectId);
             } else {
                 JOptionPane.showMessageDialog(this, 
-                        "Failed to delete subject", "Error", JOptionPane.ERROR_MESSAGE);
+                        "Échec de la suppression de la matière", "Erreur", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
@@ -755,7 +820,7 @@ public class AdminDashboard extends JFrame {
                     System.out.println("Grade updated successfully: " + gradeId);
                 } else {
                     JOptionPane.showMessageDialog(this, 
-                            "Failed to update grade", "Error", JOptionPane.ERROR_MESSAGE);
+                        "Échec de la mise à jour de la note", "Erreur", JOptionPane.ERROR_MESSAGE);
 
                     // Reload grades to reset the invalid value
                     int studentId = grade.getStudentId();
@@ -764,9 +829,8 @@ public class AdminDashboard extends JFrame {
             }
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, 
-                    "Invalid grade value or coefficient. Please enter valid numbers.", 
-                    "Error", JOptionPane.ERROR_MESSAGE);
-
+                    "Note ou coefficient invalide. Veuillez saisir des nombres valides.", 
+                    "Erreur", JOptionPane.ERROR_MESSAGE);
             // Reload grades to reset the invalid value
             int row2 = gradesTable.getSelectedRow();
             if (row2 >= 0) {
@@ -782,8 +846,8 @@ public class AdminDashboard extends JFrame {
     // SECURITY FLAW: No access control, admin can delete any grade
     private void deleteGrade(int gradeId, int row) {
         int confirm = JOptionPane.showConfirmDialog(this, 
-                "Are you sure you want to delete this grade?", 
-                "Confirm Delete", JOptionPane.YES_NO_OPTION);
+                "Voulez-vous vraiment supprimer cette note ?", 
+                "Confirmer la suppression", JOptionPane.YES_NO_OPTION);
 
         if (confirm == JOptionPane.YES_OPTION) {
             boolean success = gradeDAO.deleteGrade(gradeId);
@@ -793,7 +857,7 @@ public class AdminDashboard extends JFrame {
                 System.out.println("Grade deleted successfully: " + gradeId);
             } else {
                 JOptionPane.showMessageDialog(this, 
-                        "Failed to delete grade", "Error", JOptionPane.ERROR_MESSAGE);
+                        "Échec de la suppression de la note", "Erreur", JOptionPane.ERROR_MESSAGE);
             }
         }
     }

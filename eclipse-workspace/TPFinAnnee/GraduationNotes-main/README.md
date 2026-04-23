@@ -1,93 +1,158 @@
+﻿# GraduationNotes
 
-## 🛡️ TP Sécurité Java – *Audit et sécurisation d'une application existante*
+Application desktop de gestion de notes scolaires developpee en Java (Swing + SQLite).
+Concue pour un contexte BTS SIO SLAM -- elle supporte trois roles utilisateurs : **Administrateur**, **Enseignant** et **Etudiant**.
 
-### 📅 Durée : 4h
-
-### 🎓 Niveau : BTS SIO SLAM – Fin de 1ère année
-
----
-
-## 🎯 Objectif
-
-Vous êtes missionné·e par une entreprise fictive pour évaluer la sécurité d’une application de gestion de notes développée en Java.
-Votre mission se déroule en **trois étapes** :
+> **Avertissement** : cette application contient des vulnerabilites de securite intentionnelles a des fins pedagogiques (audit OWASP Top 10). Ne pas deployer en production.
 
 ---
 
-## 🔍 Étape 1 – Découverte de l'application (1h)
+## Fonctionnalites
 
-**Lancez et explorez librement l’application fournie.**
+### Administrateur
+- Gestion complete des utilisateurs (creation, modification, suppression)
+- Gestion des matieres (CRUD)
+- Consultation et gestion de toutes les notes
 
-Vous devez :
+### Enseignant
+- Consultation des notes de tous les etudiants
+- Saisie de nouvelles notes (valeur, coefficient, commentaire)
+- Consultation de la liste des etudiants et des matieres
 
-* Identifier ce que l'application permet de faire.
-* Comprendre sa structure : quels rôles ? quelles fonctions ? quels fichiers ?
-* Arivvez-vous à vous connecter ? Avec quel(s) utilisateur(s)/rôle(s) ?
-* Observer ce qui vous paraît curieux, risqué, étrange dans le comportement de l’application.
-
-🧠 **Question de départ** :
-
-> À votre avis, cette application est-elle sécurisée ? Justifiez.
-
----
-
-## 🔎 Étape 2 – Audit de sécurité (1h30)
-
-**Réalisez un audit technique de sécurité.**
-
-Vous devez :
-
-* Lire le code source (pas tout, mais les parties critiques : connexion, gestion utilisateurs, accès aux notes…)
-* Identifier les failles potentielles : mauvaise gestion de l’authentification, accès non restreint, absence de chiffrement, manipulation de données, logs…
-* Évaluer le **niveau de risque** de chaque problème détecté (faible / moyen / élevé)
-* Référencer les failles avec le guide **OWASP Top 10** ([https://owasp.org/www-project-top-ten/](https://owasp.org/www-project-top-ten/))
-
-🗂️ **Livrable attendu** : un **rapport d’audit de sécurité** clair, structuré, avec **au minimum les informations suivantes** :
-
-* 📌 Liste des failles identifiées, accompagnées du nom du fichier et de la ligne (si pertinent)
-* 🔥 Évaluation du niveau de criticité (faible / moyen / élevé) de chaque faille
-* 🛠 Proposition de correction ou piste d’amélioration pour chaque faille
-* 📚 Référence croisée avec une ou plusieurs règles ou catégories OWASP
-* 🧩 Commentaire sur les conséquences potentielles d’une exploitation malveillante
+### Etudiant
+- Consultation de ses propres notes par matiere
+- Visualisation des coefficients et moyennes ponderees
 
 ---
 
-## 🔧 Étape 3 – Corrections et rapport d’intervention (1h30)
+## Stack technique
 
-**Vous choisissez 2 à 3 failles critiques à corriger.**
-
-Pour chaque correction :
-
-* Modifiez le code source de manière propre et durable.
-* Testez vos modifications.
-* Vérifiez que le problème est bien résolu.
-
-🧾 **Livrable final** : un **rapport d’intervention**, contenant **au minimum les éléments suivants** :
-
-* 🪪 Introduction : rappel du contexte, des failles corrigées, de leur niveau de criticité
-* 🛠 Description technique des actions réalisées (fichiers et lignes modifiés, justification du choix technique)
-* 📸 Preuves de correction (captures d’écran, extraits de code avant/après, tests réalisés)
-* 🧠 Retour d’expérience (ce qui a été facile, difficile, ce que vous feriez différemment)
-* 🚀 Suggestions d’améliorations futures (à court et moyen terme)
+| Composant | Technologie |
+|-----------|-------------|
+| Langage | Java (JDK 8+) |
+| Interface graphique | Java Swing |
+| Base de donnees | SQLite (fichier `notes.db`) |
+| Driver JDBC | sqlite-jdbc 3.36.0.3 |
+| IDE cible | Eclipse IDE |
 
 ---
 
-## 📦 Dossier à remettre
+## Prerequis
 
-À la fin de la séance, vous devez rendre :
-
-* Le projet modifié
-* Le rapport d’audit (PDF ou `.md`)
-* Le rapport d’intervention (PDF ou `.md`)
+- JDK 8 ou superieur installe
+- Eclipse IDE (ou tout autre IDE Java)
+- Aucune installation de base de donnees requise (SQLite est embarque)
 
 ---
 
-## 🧠 Conseils pour réussir
+## Installation et lancement
 
-* Ne cherchez pas à corriger toutes les failles ! Choisissez les plus **critiques**.
-* Travaillez en équipe si possible : un qui lit le code, un qui teste, un qui rédige.
-* Appuyez-vous sur OWASP pour structurer vos raisonnements.
-* Documentez bien vos étapes.
-* Faites preuve d’esprit critique : un code qui fonctionne **n’est pas forcément un code sécurisé**.
+1. **Cloner le depot**
+   ```bash
+   git clone https://github.com/<votre-compte>/GraduationNotes.git
+   ```
+
+2. **Importer dans Eclipse**
+   - `File > Import > Existing Projects into Workspace`
+   - Selectionner le dossier racine du projet
+
+3. **Verifier le classpath**
+   Le fichier `lib/sqlite-jdbc-3.36.0.3.jar` doit etre present dans le Build Path.
+   Clic droit sur le projet -> `Build Path > Configure Build Path > Add JARs`
+
+4. **Lancer l'application**
+   Executer `src/Main.java` (classe principale avec `main()`)
+
+La base de donnees `notes.db` est creee et peuplee automatiquement au premier demarrage via `DatabaseInitializer`.
+
+---
+
+## Identifiants par defaut
+
+| Role | Nom d'utilisateur | Mot de passe |
+|------|-------------------|--------------|
+| Administrateur | `admin` | `admin123` |
+| Enseignant | `teacher1` | `teacher123` |
+| Etudiant | `student1` | `student123` |
+
+---
+
+## Structure du projet
+
+```
+GraduationNotes-main/
+├── src/
+│   ├── Main.java                        # Point d'entree
+│   ├── dao/
+│   │   ├── DatabaseConnection.java      # Connexion SQLite
+│   │   ├── UserDAO.java                 # Acces donnees utilisateurs
+│   │   ├── GradeDAO.java                # Acces donnees notes
+│   │   └── SubjectDAO.java              # Acces donnees matieres
+│   ├── model/
+│   │   ├── User.java                    # Entite de base
+│   │   ├── Student.java                 # Etudiant (herite User)
+│   │   ├── Teacher.java                 # Enseignant (herite User)
+│   │   ├── Subject.java                 # Matiere
+│   │   └── Grade.java                   # Note
+│   ├── security/
+│   │   └── AuthenticationService.java   # Authentification
+│   ├── ui/
+│   │   ├── LoginFrame.java              # Fenetre de connexion
+│   │   ├── AdminDashboard.java          # Interface administrateur
+│   │   ├── TeacherDashboard.java        # Interface enseignant
+│   │   └── StudentDashboard.java        # Interface etudiant
+│   └── utils/
+│       └── DatabaseInitializer.java     # Initialisation et seed BDD
+├── lib/
+│   └── sqlite-jdbc-3.36.0.3.jar
+├── bin/                                 # Bytecode compile (Eclipse)
+└── notes.db                             # Base de donnees SQLite (generee)
+```
+
+---
+
+## Modele de donnees
+
+```
+User (id, username, password, role, fullName, email)
+ ├── Student (classGroup, grades[])
+ └── Teacher (taughtSubjects[])
+
+Subject (id, code, name, description, defaultCoefficient)
+
+Grade (id, value, coefficient, title, comment, date, studentId->User, subject->Subject)
+
+teacher_subjects (teacher_id, subject_id)  <- table de jonction
+```
+
+---
+
+## Contexte pedagogique -- TP Securite (BTS SIO SLAM)
+
+Cette application est le support d'un TP d'audit de securite de 4h.
+Elle contient des vulnerabilites intentionnelles couvrant plusieurs categories OWASP Top 10 :
+
+- Injection SQL (requetes par concatenation de chaines)
+- Mots de passe stockes en clair
+- Controle d'acces insuffisant (IDOR)
+- Journalisation de donnees sensibles
+- Absence de protection contre le brute-force
+
+### Deroulé du TP
+
+**Etape 1 -- Decouverte (1h)**
+Lancer l'application, explorer les fonctionnalites, identifier les comportements suspects.
+
+**Etape 2 -- Audit (1h30)**
+Lire les parties critiques du code source, identifier les failles, evaluer leur criticite (faible / moyen / eleve), les referencer avec l'OWASP Top 10.
+
+Livrable : rapport d'audit (liste des failles, criticite, pistes de correction, references OWASP, consequences potentielles).
+
+**Etape 3 -- Corrections (1h30)**
+Choisir 2 a 3 failles critiques, les corriger proprement, tester, documenter avant/apres.
+
+Livrable : rapport d'intervention (contexte, actions techniques, preuves de correction, retour d'experience, suggestions).
+
+**Dossier a remettre** : projet modifie + rapport d'audit + rapport d'intervention (PDF ou `.md`).
 
 ---

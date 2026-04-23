@@ -37,8 +37,8 @@ public class Main {
 
             // Show error dialog
             JOptionPane.showMessageDialog(null,
-                    "Error initializing database: " + e.getMessage(),
-                    "Database Error",
+                    "Erreur lors de l'initialisation de la base de données : " + e.getMessage(),
+                    "Erreur de base de données",
                     JOptionPane.ERROR_MESSAGE);
 
             // Exit application

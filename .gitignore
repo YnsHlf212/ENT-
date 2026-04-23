@@ -1,0 +1,14 @@
+# Compiled bytecode
+bin/
+*.class
+
+# Eclipse metadata
+.settings/
+.metadata/
+
+# Database (contient des donnees sensibles)
+*.db
+
+# OS
+Thumbs.db
+.DS_Store
