@@ -283,8 +283,9 @@ public class LoginFrame extends JFrame {
 
     // Main method for testing
     public static void main(String[] args) {
-        // Initialize database
-        dao.DatabaseConnection.initializeDatabase();
+        // Initialize database with sample data
+        utils.DatabaseInitializer initializer = new utils.DatabaseInitializer();
+        initializer.initializeDatabase();
 
         // Create and show login frame
         SwingUtilities.invokeLater(new Runnable() {
